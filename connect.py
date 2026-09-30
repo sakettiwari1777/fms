@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from config import config
-from tc_auth import Auth
+from tc_auth import Auth 
+from tc_auth.db import create_session_factory
 
 engine = create_engine(config.DATABASE_URL, 
     pool_pre_ping=True,
@@ -8,6 +9,7 @@ engine = create_engine(config.DATABASE_URL,
 )
 
 auth = Auth(engine)
+session_factory = create_session_factory(engine=engine)
 
 if config.JWT_SECRET_KEY:
     auth.jwt.config(
