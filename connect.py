@@ -1,0 +1,81 @@
+from sqlalchemy import create_engine
+from config import config
+from tc_auth import Auth
+
+engine = create_engine(config.DATABASE_URL, 
+    pool_pre_ping=True,
+    echo=False
+)
+
+auth = Auth(engine)
+
+if config.JWT_SECRET_KEY:
+    auth.jwt.config(
+        secret_key=config.JWT_SECRET_KEY,
+        algorithm=config.JWT_ALGORITHM,
+        session_duration_days=config.JWT_SESSION_DURATION_DAYS,
+        dual_token_mode=config.JWT_DUAL_TOKEN_MODE,
+        access_token_expire_minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES,
+        refresh_token_expire_days=config.JWT_REFRESH_TOKEN_EXPIRE_DAYS,
+    )
+
+
+if config.COOKIE_MODE:
+    auth.cookie.config(
+        cookie_mode=config.COOKIE_MODE,
+        access_cookie_name=config.COOKIE_ACCESS_NAME,
+        refresh_cookie_name=config.COOKIE_REFRESH_NAME,
+        path=config.COOKIE_PATH,
+        domain=config.COOKIE_DOMAIN,
+        secure=config.COOKIE_SECURE,
+        httponly=config.COOKIE_HTTPONLY,
+        samesite=config.COOKIE_SAMESITE,
+        max_age=config.COOKIE_MAX_AGE,
+    )
+
+if config.EMAIL_USERNAME and config.EMAIL_PASSWORD:
+    auth.email.config(
+        host=config.EMAIL_HOST,
+        port=config.EMAIL_PORT,
+        username=config.EMAIL_USERNAME,
+        password=config.EMAIL_PASSWORD,
+        sender=config.EMAIL_SENDER,
+        use_tls=config.EMAIL_USE_TLS,
+    )
+
+
+if config.GOOGLE_CLIENT_ID and config.GOOGLE_CLIENT_SECRET:
+    auth.google.config(
+        client_id=config.GOOGLE_CLIENT_ID,
+        client_secret=config.GOOGLE_CLIENT_SECRET,
+        redirect_uri=config.GOOGLE_REDIRECT_URI,
+    )
+
+
+if config.GITHUB_CLIENT_ID and config.GITHUB_CLIENT_SECRET:
+    auth.github.config(
+        client_id=config.GITHUB_CLIENT_ID,
+        client_secret=config.GITHUB_CLIENT_SECRET,
+        redirect_uri=config.GITHUB_REDIRECT_URI,
+    )
+
+
+if config.DISCORD_CLIENT_ID and config.DISCORD_CLIENT_SECRET:
+    auth.discord.config(
+        client_id=config.DISCORD_CLIENT_ID,
+        client_secret=config.DISCORD_CLIENT_SECRET,
+        redirect_uri=config.DISCORD_REDIRECT_URI,
+    )
+
+if config.LOGGING or config.LOG_CAPTURE_TERMINAL:
+    auth.log.config(
+        logging=config.LOGGING,
+        logs_dir=config.LOGS_DIR,
+        level=config.LOG_LEVEL,
+        console_output=config.LOG_CONSOLE_OUTPUT,
+        capture_terminal=config.LOG_CAPTURE_TERMINAL,
+        redact_sensitive=config.LOG_REDACT_SENSITIVE,
+        redact_patterns=config.LOG_REDACT_PATTERNS,
+        max_log_lines=config.LOG_MAX_LOG_LINES,
+        trim_log_lines=config.LOG_TRIM_LOG_LINES,
+    )
