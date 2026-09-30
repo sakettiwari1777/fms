@@ -4,7 +4,7 @@ from tc_auth import Auth
 
 engine = create_engine(config.DATABASE_URL, 
     pool_pre_ping=True,
-    echo=False
+    echo=True
 )
 
 auth = Auth(engine)

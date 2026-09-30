@@ -19,6 +19,24 @@ app.add_middleware(
 )
 
 
+def init():
+    from tc_auth.db import Base
+    from db import FundTransaction
+    from connect import engine
+
+
+    Base.metadata.create_all(bind=engine)
+
+def destroy():
+    from tc_auth.db import Base
+    from db import FundTransaction
+    from connect import engine
+
+    Base.metadata.drop_all(bind=engine)
+
+
+
+
 
 def run():
     import uvicorn
