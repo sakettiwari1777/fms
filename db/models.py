@@ -1,0 +1,1 @@
+from tc_auth.db import Base
